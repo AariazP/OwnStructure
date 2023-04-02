@@ -1,49 +1,37 @@
 package org.alejandroArias.application;
 
-import org.alejandroArias.model.LinkedList;
+
+import org.alejandroArias.model.CircularList;
 
 public class Application {
 
 
     public static void main(String[] args) {
 
-        // verify that LinkedList is working
-        //verify all methods of LinkedList
+        CircularList<Integer> circularList = new CircularList<>();
 
-        LinkedList<Integer> list = new LinkedList<>();
-
-        list.add(1);
-        list.add(2);
-        list.add(3);
-        list.add(4);
-        list.add(5);
-        list.add(6);
-        list.add(7);
-        list.add(8);
-        list.add(9);
-        list.add(10);
-
-        System.out.println(list);
-
-        list.add(0, 0);
-        list.add(11, 11);
-        list.add(5, 5);
-
-        System.out.println(list);
+        circularList.add(1);
+        circularList.add(2);
+        circularList.add(3);
+        circularList.add(4);
+        circularList.add(5);
+        circularList.add(6);
 
 
-        System.out.println(list.get(0));
-        System.out.println(list.get(5));
-        System.out.println(list.get(11));
+        circularList.print();
+        circularList.reverse();
+        circularList.print();
+        CircularList<Integer> circularList1 = new CircularList<>();
+        circularList1.add(7);
+        circularList1.add(8);
+        circularList1 = circularList.merge(circularList1);
+        circularList1.print();
 
-        list.remove(0);
-        list.remove(5);
-        //list.remove(11);
+        circularList.remove(3);
+        circularList.print();
 
-        System.out.println(list);
-
-
-
+        Integer data = circularList.search(2);
+        System.out.println(data);
 
 
     }
