@@ -1,6 +1,8 @@
 package org.alejandroArias.model;
 
 import java.util.Comparator;
+import java.util.Iterator;
+import java.util.Objects;
 
 /**
  * This class represents a LinkedList data structure
@@ -285,7 +287,7 @@ public class LinkedList<T> {
      * Node class
      * @param <T> the type of the data stored in the node
      */
-    private static class Node<T> {
+    private static class Node<T> implements Iterator<T>, Comparable<T>{
 
         private T data; // data stored in the node
         private Node<T> next; // reference to the next node
@@ -311,6 +313,39 @@ public class LinkedList<T> {
             this.next = next;
         }
 
+
+        @Override
+        public boolean hasNext() {
+            return this.next != null;
+        }
+
+        @Override
+        public T next() {
+            return this.next.data;
+        }
+
+
+        @Override
+        public int compareTo(T o) {
+
+            if (this.data.equals(o)) return 0;
+            if(this.data.hashCode() > o.hashCode()) return 1;
+            return -1;
+
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Node<?> node = (Node<?>) o;
+            return Objects.equals(data, node.data) && Objects.equals(next, node.next);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(data, next);
+        }
     }
 
 
