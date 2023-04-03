@@ -1,6 +1,9 @@
 package org.alejandroArias.model;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 /**
  * This class represents a circular list of nodes
@@ -8,11 +11,13 @@ import java.util.Objects;
  * and the tail points to the head
  * @author Alejandro
  */
-public class CircularList<T> {
+public class CircularList<T> implements Iterator<T>{
 
     private Node<T> head;
     private Node<T> tail;
     private int size;
+
+    private int index;
 
     public CircularList() {
         this.head = null;
@@ -20,29 +25,6 @@ public class CircularList<T> {
         this.size = 0;
     }
 
-    public Node<T> getHead() {
-        return head;
-    }
-
-    public void setHead(Node<T> head) {
-        this.head = head;
-    }
-
-    public Node<T> getTail() {
-        return tail;
-    }
-
-    public void setTail(Node<T> tail) {
-        this.tail = tail;
-    }
-
-    public int getSize() {
-        return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
-    }
 
     /**
      * This method adds a node to the list
@@ -52,13 +34,11 @@ public class CircularList<T> {
         Node<T> node = new Node<>(data);
         if (head == null) {
             head = node;
-            tail = node;
-            tail.setNext(head);
         } else {
             tail.setNext(node);
-            tail = node;
-            tail.setNext(head);
         }
+        tail = node;
+        tail.setNext(head);
         size++;
     }
 
@@ -96,63 +76,6 @@ public class CircularList<T> {
      */
     public T search(T data) {
         return Objects.requireNonNull(getNode(data)).getData();
-    }
-
-    /**
-     * This method prints the list
-     */
-
-    public void printList() {
-        Node<T> current = head;
-        if (head != null) {
-            do {
-                System.out.println(current.getData());
-                current = current.getNext();
-            } while (current != head);
-        }
-    }
-
-    /**
-     * This method returns the node at the specified index
-     * @param index the index of the node
-     * @return the node at the specified index
-     */
-    public Node<T> getNode(int index) {
-        Node<T> aux = head;
-        int counter = 0;
-        if (head != null) {
-            do {
-                if (counter == index) {
-                    return aux;
-                }
-                aux = aux.getNext();
-                counter++;
-            } while (aux != head);
-        }
-        return null;
-
-    }
-
-    /**
-     * This method returns the index of the specified node
-     * @param node the node to search for
-     * @return the index of the node
-     */
-
-    public int getIndex(Node<T> node) {
-        Node<T> current = head;
-        int counter = 0;
-        if (head != null) {
-            do {
-                if (current == node) {
-                    return counter;
-                }
-                current = current.getNext();
-                counter++;
-            } while (current != head);
-        }
-        return -1;
-
     }
 
     /**
@@ -199,27 +122,6 @@ public class CircularList<T> {
 
     }
 
-    /**
-     * This method returns the data of the node at the specified index
-     * @return the data of the node
-     */
-
-
-    public T getData(Node<T> node) {
-        Node<T> current = head;
-        if (head != null) {
-            do {
-                if (current == node) {
-                    return current.getData();
-                }
-                current = current.getNext();
-            } while (current != head);
-        }
-        return null;
-
-    }
-
-
     private Node<T> getNode(T data) {
         Node<T> current = head;
         if (head != null) {
@@ -233,40 +135,6 @@ public class CircularList<T> {
         return null;
     }
 
-
-    public void printList(Node<T> node) {
-        Node<T> current = node;
-        if (head != null) {
-            do {
-                System.out.println(current.getData());
-                current = current.getNext();
-            } while (current != node);
-        }
-    }
-
-    public void printList(Node<T> node, int size) {
-        Node<T> current = node;
-        if (head != null) {
-            for (int i = 0; i < size; i++) {
-                System.out.println(current.getData());
-                current = current.getNext();
-            }
-        }
-    }
-
-
-    public void printList(Node<T> node, int size, int index) {
-        Node<T> current = node;
-        if (head != null) {
-            for (int i = 0; i < size; i++) {
-                if (i >= index) {
-                    System.out.println(current.getData());
-                }
-                current = current.getNext();
-            }
-        }
-    }
-
     /**
      * This method clears the list
      */
@@ -276,7 +144,6 @@ public class CircularList<T> {
         tail = null;
         size = 0;
     }
-
     public void reverse() {
         Node<T> current = head;
         Node<T> previous = null;
@@ -293,78 +160,6 @@ public class CircularList<T> {
             tail.setNext(head);
         }
     }
-
-    public void reverse(Node<T> node) {
-        Node<T> current = node;
-        Node<T> previous = null;
-        Node<T> next = null;
-        if (head != null) {
-            do {
-                next = current.getNext();
-                current.setNext(previous);
-                previous = current;
-                current = next;
-            } while (current != node);
-            node = previous;
-        }
-    }
-
-    public void reverse(Node<T> node, int size) {
-        Node<T> current = node;
-        Node<T> previous = null;
-        Node<T> next = null;
-        if (head != null) {
-            for (int i = 0; i < size; i++) {
-                next = current.getNext();
-                current.setNext(previous);
-                previous = current;
-                current = next;
-            }
-            node = previous;
-        }
-    }
-
-    public void rotate(int index) {
-        Node<T> current = head;
-        Node<T> previous = null;
-        Node<T> next = null;
-        if (head != null) {
-            for (int i = 0; i < index; i++) {
-                next = current.getNext();
-                current.setNext(previous);
-                previous = current;
-                current = next;
-            }
-            head = previous;
-            tail = current;
-            tail.setNext(head);
-        }
-    }
-
-    public T[] toArray() {
-        T[] array = (T[]) new Object[size];
-        Node<T> current = head;
-        if (head != null) {
-            for (int i = 0; i < size; i++) {
-                array[i] = current.getData();
-                current = current.getNext();
-            }
-        }
-        return array;
-    }
-
-    public T[] split(int index) {
-        T[] array = (T[]) new Object[size];
-        Node<T> current = head;
-        if (head != null) {
-            for (int i = 0; i < size; i++) {
-                array[i] = current.getData();
-                current = current.getNext();
-            }
-        }
-        return array;
-    }
-
     public void insertAfter(T data, T newData) {
 
         Node<T> current = head;
@@ -435,6 +230,12 @@ public class CircularList<T> {
         return newList;
     }
 
+    /**
+     * This method returns a sublist of the list
+     * return a sublist of the list starting from the specified index
+     * @param index the index to start from
+     * @return the sublist
+     */
     public CircularList<T> subList(int index) {
         CircularList<T> newList = new CircularList<>();
         Node<T> current = head;
@@ -536,8 +337,43 @@ public class CircularList<T> {
         System.out.println();
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        Node<T> current = head;
+        if (head != null) {
+            do {
+                sb.append(current.getData()).append(" ");
+                current = current.getNext();
+            } while (current != head);
+        }
+        return sb.toString();
+    }
 
-    private static class Node<T> {
+    @Override
+    public boolean hasNext() {
+        return index < size;
+    }
+
+    @Override
+    public T next() {
+
+        if(!hasNext()) {
+            throw new NoSuchElementException("No more elements");
+        }
+
+        Node<T> current = head;
+        for (int i = 0; i < index; i++) {
+            current = current.getNext();
+        }
+        index++;
+        return current.getData();
+
+
+    }
+
+
+    private static class Node<T>  {
         private T data;
         private Node<T> next;
 
@@ -560,7 +396,43 @@ public class CircularList<T> {
         public void setNext(Node<T> next) {
             this.next = next;
         }
+
+        /**
+         * To string method
+         */
+
+        @Override
+        public String toString() {
+            return data.toString();
+        }
+
+
     }
 
+    //Getters and Setters
+
+    public Node<T> getHead() {
+        return head;
+    }
+
+    public void setHead(Node<T> head) {
+        this.head = head;
+    }
+
+    public Node<T> getTail() {
+        return tail;
+    }
+
+    public void setTail(Node<T> tail) {
+        this.tail = tail;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
 
 }
