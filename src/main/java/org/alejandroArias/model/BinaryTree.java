@@ -39,6 +39,9 @@ public class BinaryTree<T  extends Comparable<T>> {
         return nodeCount;
     }
 
+    // Get the root of this binary tree
+    public T root(){return root.data;}
+
     // Add an element to this binary tree. Returns true
     // if we successfully perform an insertion
     public boolean add(T elem) {
@@ -198,6 +201,29 @@ public class BinaryTree<T  extends Comparable<T>> {
 
             // We found the value we were looking for
         else return true;
+    }
+
+    //returns the element if the element exists in the tree
+    public T find(T elem){return find(root, elem);}
+
+    // private recursive method to find an element in the tree
+    private T find(Node node, T elem){
+
+        // Base case: reached bottom, value not found
+        if(node == null){return null;}
+
+        int cmp = node.data.compareTo(elem);
+
+        // Dig into the left subtree because the value we're
+        // looking for is smaller than the current value
+        if(cmp < 0){return find(node.left, elem);}
+
+        // Dig into the right subtree because the value we're
+        // looking for is greater than the current value
+        else if (cmp > 0) {return find(node.right, elem);}
+
+        // We found the value we were looking for
+        else{return node.data;}
     }
 
     // Computes the height of the tree, O(n)
